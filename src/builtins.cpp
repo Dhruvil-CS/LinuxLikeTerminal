@@ -1,0 +1,43 @@
+#include "builtins.h"
+#include <iostream>
+#include <unistd.h>
+#include <limits.h>
+#include <filesystem>
+
+void Builtins::changeDirectory(const std::vector<std::string>& args) {
+    if (args.size() < 2) {
+        std::cerr << "cd: missing argument" << std::endl;
+        return;
+    }
+    if (chdir(args[1].c_str()) != 0) {
+        perror("cd failed");
+    }
+}
+
+void Builtins::printWorkingDirectory() {
+    char cwd[PATH_MAX];
+    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+        std::cout << cwd << std::endl;
+    } else {
+        perror("pwd failed");
+    }
+}
+void Builtins::listDirectory(const std::vector<std::string>& args) {
+        std::string directory = ".";
+        if (args.size() > 1) {
+            directory = args[1];
+        }
+
+        try {
+            for (const auto& entry : std::filesystem::directory_iterator(directory)) {
+                std::cout << entry.path().filename().string();
+                if (entry.is_directory()) {
+                    std::cout << "/";
+                }
+                std::cout << " ";
+            }
+            std::cout << std::endl;
+        } catch (const std::filesystem::filesystem_error& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
+    }

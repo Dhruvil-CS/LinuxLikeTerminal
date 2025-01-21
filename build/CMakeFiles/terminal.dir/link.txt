@@ -1,0 +1,1 @@
+/Library/Developer/CommandLineTools/usr/bin/c++  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.2.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/terminal.dir/src/main.cpp.o CMakeFiles/terminal.dir/src/shell.cpp.o CMakeFiles/terminal.dir/src/builtins.cpp.o CMakeFiles/terminal.dir/src/utils.cpp.o -o terminal
