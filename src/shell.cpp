@@ -17,7 +17,12 @@ const std::unordered_set<std::string> supportedCommands = {
     "help",
     "alias",
     "unalias",
-    "ls"
+    "ls",
+    "echo",
+    "pwd",
+    "touch",
+    "rm",
+    "cat"
 };
 
 // Aliases for supported commands
@@ -172,7 +177,15 @@ void Shell::handleUnaliasCommand(const std::vector<std::string>& args) {
         std::cerr << "Alias not found: " << aliasName << std::endl;
     }
 }
-
+void Shell::handleEchoCommand(const std::vector<std::string>& args){
+    for (size_t i=1; i<args.size();++i){
+        std::cout << args[i];
+        if (i!= args.size()-1){
+            std::cout << " ";
+        }
+    }
+    std::cout<<std::endl;
+}
 void Shell::handleBuiltinCommands(const std::vector<std::string>& args) {
     if (args[0] == "cd") {
         Builtins::changeDirectory(args);
@@ -188,13 +201,39 @@ void Shell::handleBuiltinCommands(const std::vector<std::string>& args) {
         std::cout << "- help: Display this help message\n";
         std::cout << "- alias <name>=<command>: Define a custom alias\n";
         std::cout << "- unalias <name>: Remove a custom alias\n";
+        std::cout << "- echo <text>: Print text to the console\n";
+        std::cout << "- pwd: Print the current working directory\n";
+        std::cout << "- cat <filename>: Display file contents\n";
+        std::cout << "- touch <filename>: Create an empty file or update its timestamp\n";
+        std::cout << "- rm <filename>: Delete a file\n";
     } else if (args[0] == "alias") {
         handleAliasCommand(args);
     } else if (args[0] == "unalias") {
         handleUnaliasCommand(args);
     } else if(args[0] == "ls"){
         Builtins::listDirectory(args);
-    } else {
+    } else if(args[0] == "echo"){
+        handleEchoCommand(args);
+    } else if(args[0] == "cat"){
+        if(args.size() <2){
+            std::cerr << "Usage: cat <filename>\n";
+        } else {
+            Builtins::displayFileContents(args[1]);
+        }
+    } else if(args[0] == "touch"){
+        if(args.size()<2){
+            std::cerr << "Usage: touch <filename>\n";
+        } else {
+            Builtins::createFile(args[1]);
+        }
+    } else if(args[0] == "rm"){
+        if (args.size() < 2){
+            std::cerr << "Usage: rm <filename>\n";
+        } else {
+            Builtins::removeFile(args[1]);
+        }
+    }
+    else {
         std::cerr << "Error: Command not implemented: " << args[0] << std::endl;
     }
 }

@@ -1,6 +1,5 @@
 #ifndef SHELL_H
 #define SHELL_H
-
 #include <string>
 #include <vector>
 
@@ -20,6 +19,6 @@ public:
     void handleUnaliasCommand(const std::vector<std::string>& args);
     void loadAliases();
     void saveAliases();
+    void handleEchoCommand(const std::vector<std::string>& args);
 };
-
 #endif // SHELL_H
